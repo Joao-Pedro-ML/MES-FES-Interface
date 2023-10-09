@@ -103,8 +103,8 @@
         
         // Evento de clique do botão "Parar"
         document.getElementById('parar').onclick = function() {
-            socket.emit('update_params', { threshold: th, tempo_ativacao: ta, intensidade: i, command: 0xFF, tempoPos: tempoPos });
-
+            socket.emit('update_params', { threshold: threshold, tempo_ativacao: tempo_ativacao, intensidade: intensidade, command: 0xFF, tempoPos: tempoPos });
+            console.log('Parado');
             // Atualiza a mensagem de status
             document.getElementById('coleta-status').innerText = 'Coleta interrompida.';
         };
