@@ -41,6 +41,7 @@
     <p id="coleta-status"></p>
 
     <div id="botoes-container">
+        <button id="iniciar" class="round-button button-size">Iniciar</button>
         <button id="parar" class="round-button button-size">Parar</button>
         <a href="/chart" class="round-button">Ir para o Gráfico</a>
     </div>
@@ -109,6 +110,12 @@
             document.getElementById('coleta-status').innerText = 'Coleta interrompida.';
         };
     
+        document.getElementById('iniciar').onclick = function() {
+            socket.emit('iniciar_coleta', { command: 0x01 }); // Envie um comando para iniciar a coleta
+            // Atualize a mensagem de status, se necessário
+            document.getElementById('coleta-status').innerText = 'Coleta retomada.';
+        };
+        
 
     </script>
     
