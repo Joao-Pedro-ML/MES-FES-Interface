@@ -1,0 +1,129 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    text-align: center;
+}
+
+h1 {
+    background-color: #FC8236;
+    color: #fff;
+    padding: 20px;
+}
+
+#param-form {
+    max-width: 400px;
+    margin: 20px auto;
+    color: #000000;
+    background-color: #FC8236;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.param-pair {
+    display: inline-block;
+    margin-right: 20px; /* Espaço entre os pares de rótulo e campo de entrada */
+}
+
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+input[type="number"] {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+p {
+    font-size: 18px;
+    color: #fff;
+}
+
+a {
+    display: inline-block;
+    background-color: #FC8236;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 16px;
+    margin: 0 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#botoes-container {
+    text-align: center; 
+    margin-top: 20px; 
+}
+
+.round-button {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px; /* Ajuste o valor para controlar o raio dos cantos */
+    background-color: #FC8236; /* Cor de fundo do botão */
+    color: #fff; /* Cor do texto do botão */
+    cursor: pointer;
+    border: none; /* Remove a borda */
+    outline: none; /* Remove a borda de foco */
+    margin: 0 10px; /* Espaçamento horizontal entre os botões */
+}
+
+#parar {
+    display: inline-block;
+    background-color: #FC8236;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px; 
+    cursor: pointer;
+    border: none; /* Remove a borda */
+    outline: none; /* Remove a borda de foco */
+    margin: 0 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.round-button:hover {
+    /* background-color: #FC8236; Nova cor de fundo ao passar o cursor */
+    transform: scale(1.05); /* Aumenta a escala ao passar o cursor */
+}
+
+.round-button:active {
+    background-color: #274144; 
+    transform: scale(0.95); 
+}
+
+.button-size {
+    width: 150px; /* Ajuste a largura desejada */
+    height: 50px; /* Ajuste a altura desejada */
+}
+
+#update-result {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #FC8236;
+}

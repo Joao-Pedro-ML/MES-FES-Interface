@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MES-FES Web Interface</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Inclua a biblioteca jQuery -->
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css"> 
+    <link rel="icon" href="/static/img/favicon.png" type="image/png">
+
+</head>
+<body>
+    <h1>Controle de Parâmetros</h1>
+    <div id="param-values" class="param-pair">
+        <p>Threshold: <span id="threshold_value">{{ threshold }} V</span></p>
+        <p>Tempo de Ativação: <span id="tempo_ativacao_value">{{ tempo_ativacao }} segundos</span></p>
+        <p>Intensidade: <span id="intensidade_value">{{ intensidade }} segundos</span></p>
+        <p>Tempo pós FES: <span id="tempoPos_value">{{ tempoPos }} segundos</span></p>
+    </div>
+    
+    <form id="param-form">
+        <div class="param-pair">
+            <label for="threshold">Threshold:</label>
+            <input type="number" name="threshold" id="threshold" step="0.01">
+        </div>
+        <div class="param-pair">
+            <label for="tempo_ativacao">Tempo de Ativação:</label>
+            <input type="number" name="tempo_ativacao" id="tempo_ativacao" step="0.01">
+        </div>
+        <div class="param-pair">
+            <label for="intensidade">Intensidade:</label>
+            <input type="number" name="intensidade" id="intensidade" step="0.01">
+        </div>
+        <div class="param-pair">
+            <label for="tempoPos">Tamanho da Janela:</label>
+            <input type="number" name="tempoPos" id="tempoPos" step="1">
+        </div>
+        <input type="submit" value="Atualizar Parâmetros">
+    </form>
+    <!-- Mensagem de alteração dos parametros -->
+    <p id="update-result"></p>
+    <p id="coleta-status"></p>
+
+    <div id="botoes-container">
+        <button id="parar" class="round-button button-size">Parar</button>
+        <a href="/chart" class="round-button">Ir para o Gráfico</a>
+    </div>
+
+
+
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('connect', function() {
+            console.log('Socket connected');
+        });
+
+        socket.on('disconnect', function() {
+            console.log('Socket disconnected');
+        });
+
+        // Função para atualizar os valores dos parâmetros
+        function updateParameters() {
+            var threshold = $("#threshold").val();
+            var tempo_ativacao = $("#tempo_ativacao").val();
+            var intensidade = $("#intensidade").val();
+            var tempoPos = $("#tempoPos").val();
+            
+            $.ajax({
+                type: "POST",
+                url: "/update_params",
+                data: { threshold: threshold, tempo_ativacao: tempo_ativacao, intensidade: intensidade, tempoPos: tempoPos },
+                success: function(data) {
+                    if (data.success) {
+                        // Atualize os valores na página sem recarregar
+                        $("#threshold_value").text(threshold);
+                        $("#tempo_ativacao_value").text(tempo_ativacao);
+                        $("#intensidade_value").text(intensidade);
+                        $("#tempoPos_value").text(tempoPos);
+                        
+                        document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
+                    } else {
+                        document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
+                    }
+                }
+            });
+        }
+
+        // Enviar os novos parâmetros para o servidor
+        document.getElementById('param-form').onsubmit = function(e) {
+            e.preventDefault();
+            updateParameters();
+        };
+
+        // Atualize o resultado após a atualização dos parâmetros
+        socket.on('params_updated', function(data) {
+            if (data.success) {
+                document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
+            } else {
+                document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
+            }
+        });
+
+        
+        // Evento de clique do botão "Parar"
+        document.getElementById('parar').onclick = function() {
+            socket.emit('update_params', { threshold: th, tempo_ativacao: ta, intensidade: in, command: 0xFF, tempoPos: tempoPos });
+
+            // Atualiza a mensagem de status
+            document.getElementById('coleta-status').innerText = 'Coleta interrompida.';
+        };
+    
+
+    </script>
+    
+</body>
+</html>

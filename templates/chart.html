@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico ao Vivo</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="icon" href="/static/img/favicon.png" type="image/png">
+</head>
+<body>
+    <h1>Gráfico ao Vivo</h1>
+    <div id="live-chart"></div>
+
+    <div>
+        <a href="/">Voltar</a>
+    </div>
+
+    <script>
+        // Crie o gráfico ao vivo aqui usando Plotly ou outra biblioteca de sua escolha
+        var dataBuffer = [];
+        var timeBuffer = [];
+        var updateInterval = 1;  // Intervalo de atualização em milissegundos
+
+        // Função para atualizar o gráfico
+        function updateChart() {
+            Plotly.newPlot('live-chart', [{
+                x: timeBuffer,
+                y: dataBuffer,
+                type: 'line', 
+                borderColor: 'green',
+                
+            }], {
+                title: 'Gráfico ao Vivo',
+                xaxis: {
+                    title: 'Tempo'
+                },
+                yaxis: {
+                    title: 'Volt'
+                }
+            });
+        }
+
+        // Função para buscar dados do servidor
+        function fetchData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    timeBuffer = data.time;
+                    dataBuffer = data.data;
+                    updateChart();
+                });
+        }
+
+        // Atualize o gráfico periodicamente
+        setInterval(fetchData, updateInterval);
+    </script>
+</body>
+</html>

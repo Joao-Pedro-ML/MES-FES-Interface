@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico ao Vivo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <h1>Gráfico ao Vivo</h1>
+    <canvas id="live-chart" width="800" height="400"></canvas>
+
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('connect', function() {
+            console.log('Socket connected');
+        });
+
+        socket.on('disconnect', function() {
+            console.log('Socket disconnected');
+        });
+
+        // Código JavaScript para criar o gráfico ao vivo aqui
+        var ctx = document.getElementById('live-chart').getContext('2d');
+        var timeData = [];
+        var emgData = [];
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timeData,
+                datasets: [{
+                    label: 'EMG Data',
+                    borderColor: 'grenn',
+                    borderWidth: 1,
+                    fill: false,
+                    data: emgData
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    },
+                    y: {
+                        min: -0.5,
+                        max: 4.5
+                    }
+                }
+            }
+        });
+
+        // Função para adicionar dados ao gráfico
+        function addData(time, emg) {
+            timeData.push(time);
+            emgData.push(emg);
+            if (timeData.length > 100) {
+                timeData.shift();
+                emgData.shift();
+            }
+            chart.update();
+        }
+
+        // Socket.io para receber dados em tempo real do servidor Flask
+        socket.on('serial_data', function(data) {
+            addData(data.time, data.emg);
+        });
+    </script>
+</body>
+</html>
