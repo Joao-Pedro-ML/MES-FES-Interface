@@ -31,7 +31,7 @@
             <input type="number" name="intensidade" id="intensidade" step="0.01">
         </div>
         <div class="param-pair">
-            <label for="tempoPos">Tamanho da Janela:</label>
+            <label for="tempoPos">Tempo pós FES:</label>
             <input type="number" name="tempoPos" id="tempoPos" step="1">
         </div>
         <input type="submit" value="Atualizar Parâmetros">
@@ -45,8 +45,6 @@
         <button id="parar" class="round-button button-size">Parar</button>
         <a href="/chart" class="round-button">Ir para o Gráfico</a>
     </div>
-
-
 
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -96,28 +94,45 @@
         socket.on('params_updated', function(data) {
             if (data.success) {
                 document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
+                showBalloonMessage('Parâmetros atualizados com sucesso!', 3000);
             } else {
                 document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
+                showBalloonMessage('Erro ao atualizar os parâmetros.', 3000);
             }
         });
 
-        
+
+        // Função para exibir mensagens em balões que desaparecem após um período de tempo
+        function showBalloonMessage(message, timeout) {
+            var balloon = document.createElement('div');
+            balloon.className = 'balloon-message';
+            balloon.innerText = message;
+            document.body.appendChild(balloon);
+    
+            setTimeout(function() {
+                document.body.removeChild(balloon);
+            }, timeout);
+        }
+    
         // Evento de clique do botão "Parar"
         document.getElementById('parar').onclick = function() {
-            socket.emit('update_params', { threshold: threshold, tempo_ativacao: tempo_ativacao, intensidade: intensidade, command: 0xFF, tempoPos: tempoPos });
+            socket.emit('update_params', { command: 0xFF });
             console.log('Parado');
-            // Atualiza a mensagem de status
-            document.getElementById('coleta-status').innerText = 'Coleta interrompida.';
+            showBalloonMessage('Coleta interrompida.', 3000);
         };
     
+        // Evento de clique do botão "Iniciar"
         document.getElementById('iniciar').onclick = function() {
-            socket.emit('iniciar_coleta', { command: 0x01 }); // Envie um comando para iniciar a coleta
-            // Atualize a mensagem de status, se necessário
-            document.getElementById('coleta-status').innerText = 'Coleta retomada.';
+            socket.emit('iniciar_coleta', { command: 0x01 });
+            console.log('Retomado');
+            showBalloonMessage('Coleta retomada.', 3000);
         };
-        
+
 
     </script>
+
+    
+
     
 </body>
 </html>
