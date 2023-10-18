@@ -55,9 +55,6 @@ def read_serial_data():
             b2 = int.from_bytes(ser.read(), "big")
             current_time_millis = int(round(time.time() * 1000))
             dado = b1 * 256 + b2
-            #data_buffer.append(dado)
-            # time_buffer.append(current_time_millis - current_time_millis + start)
-            # start = start + (1/1000)
             # Aplica o filtro notch em 60Hz
             dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado], zi=zi_notch)
             # Aplica o filtro passa-banda
