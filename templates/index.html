@@ -112,12 +112,10 @@
             balloon.className = 'balloon-message';
             balloon.innerText = message;
         
-            // Adicione a nova mensagem à lista de mensagens
             var messageList = document.getElementById('message-list');
             messageList.appendChild(balloon);
         
             setTimeout(function() {
-                // Remova a mensagem após o tempo limite
                 messageList.removeChild(balloon);
             }, timeout);
         }        
@@ -127,7 +125,7 @@
             socket.emit('update_params', { command: 0xFF });
             console.log('Coleta interrompida');
             showBalloonMessage('Coleta interrompida.', 3000);
-            coleta_ativa = false; // Desative a coleta
+            coleta_ativa = false; // Desativa a coleta
         };
 
         document.getElementById('ativar-fes').onclick = function() {
@@ -142,7 +140,7 @@
             socket.emit('iniciar_coleta', { command: 0x01 });
             console.log('Coleta iniciada');
             showBalloonMessage('Coleta iniciada.', 3000);
-            coleta_ativa = true; // Ative a coleta
+            coleta_ativa = true; // Ativa a coleta
         };
 
         let estadoAnterior = null; // Variável para rastrear o estado anterior
