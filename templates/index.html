@@ -76,9 +76,11 @@
                         $("#intensidade_value").text(intensidade);
                         $("#tempoPos_value").text(tempoPos);
                         
-                        document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
+                        //document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
+                        showBalloonMessage('Parâmetros atualizados com sucesso!', 3000);
                     } else {
-                        document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
+                        //document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
+                        showBalloonMessage('Erro ao atualizar os parâmetros.', 3000);
                     }
                 }
             });
@@ -93,14 +95,38 @@
         // Atualize o resultado após a atualização dos parâmetros
         socket.on('params_updated', function(data) {
             if (data.success) {
-                document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
+                //document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
                 showBalloonMessage('Parâmetros atualizados com sucesso!', 3000);
             } else {
-                document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
+                //document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
                 showBalloonMessage('Erro ao atualizar os parâmetros.', 3000);
             }
         });
 
+        let estadoAnterior = null; // Variável para rastrear o estado anterior
+
+        // Esta função será executada assim que a página estiver completamente carregada
+        window.addEventListener('DOMContentLoaded', function () {
+            verificarEstadoFES();
+        });
+
+        function verificarEstadoFES() {
+            fetch('/FES')
+                .then(response => response.json())
+                .then(data => {
+                    const novoEstado = data.FES;
+                    if (estadoAnterior !== null && estadoAnterior === 'desligada' && novoEstado === 'ativada') {
+                        showBalloonMessage('FES Ativada!', 3000);
+                    }
+                    estadoAnterior = novoEstado;
+                })
+                .catch(error => {
+                    console.error('Ocorreu um erro ao chamar a rota FES:', error);
+                });
+            setTimeout(verificarEstadoFES, 1000); 
+        }
+
+  
 
         // Função para exibir mensagens em balões que desaparecem após um período de tempo
         function showBalloonMessage(message, timeout) {

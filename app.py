@@ -43,18 +43,23 @@ b_notch, a_notch = signal.iirnotch(f_notch, Q, fs)
 zi = signal.lfilter_zi(b, a)
 zi_notch = signal.lfilter_zi(b_notch, a_notch)
 
+fes = 0
+
 # Função para ler dados da porta serial
 def read_serial_data():
-    global zi_notch, zi
+    global zi_notch, zi, fes
     start = 0
     while True:
         try:
             while int.from_bytes(ser.read(), "big") != 204:
                 pass
+            
             b1 = int.from_bytes(ser.read(), "big")
             b2 = int.from_bytes(ser.read(), "big")
             current_time_millis = int(round(time.time() * 1000))
             dado = b1 * 256 + b2
+            if dado == 1000:
+                fes = 1
             # Aplica o filtro notch em 60Hz
             dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado], zi=zi_notch)
             # Aplica o filtro passa-banda
@@ -82,6 +87,12 @@ def update_parameters():
 
     return jsonify({'success': True})
 
+@app.route('/FES')
+def FES():
+    if fes == 1:
+        return jsonify({'FES': 'ativada'})
+    elif fes == 0:
+        return jsonify({'FES': 'desligada'})
     
 # Iniciar a leitura da porta serial em uma thread separada
 serial_thread = threading.Thread(target=read_serial_data)
@@ -92,7 +103,6 @@ serial_thread.start()
 @app.route('/')
 def index():
     return render_template('index.html', threshold=th, tempo_ativacao=ta, intensidade=i, tempoPos=tempoPos)
-
 
 # Rota para fornecer dados para o gráfico em formato JSON
 @app.route('/data')
