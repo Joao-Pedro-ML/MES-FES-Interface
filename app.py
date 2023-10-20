@@ -45,6 +45,9 @@ zi_notch = signal.lfilter_zi(b_notch, a_notch)
 
 fes = 0
 
+coleta_ativa = False
+
+
 # Função para ler dados da porta serial
 def read_serial_data():
     global zi_notch, zi, fes
@@ -58,14 +61,16 @@ def read_serial_data():
             b2 = int.from_bytes(ser.read(), "big")
             current_time_millis = int(round(time.time() * 1000))
             dado = b1 * 256 + b2
-            if dado == 1000:
+            if dado == 70:
+                print('FES Ativada')
                 fes = 1
             # Aplica o filtro notch em 60Hz
-            dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado], zi=zi_notch)
+            dado_conv = abs((dado*3.3)/4095)
+            dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado_conv], zi=zi_notch)
             # Aplica o filtro passa-banda
             dado_filtrado, zi = signal.lfilter(b, a, dado_filtrado_notch, zi=zi)
-            dado_certo = (abs(dado_filtrado[0])*3.3)/4095
-            data_buffer.append(dado_certo)
+            #dado_certo = (abs(dado_filtrado[0])*3.3)/4095
+            data_buffer.append(abs(dado_filtrado[0]))
             time_buffer.append(current_time_millis - current_time_millis + start)
             start = start + (1/1000)
         except ValueError:
@@ -113,6 +118,22 @@ def get_data():
 @app.route('/chart')
 def chart():
     return render_template('chart.html')
+
+@socketio.on('update_params')
+def stop_collection(data):
+    command = data['command']
+    ser.write(bytes([command]))
+    print('Comando para parar coleta enviado ao ESP32')
+    
+# Função para iniciar a coleta no servidor
+@socketio.on('iniciar_coleta')
+def start_collection(data):
+    global coleta_ativa
+    command = data['command']
+    ser.write(bytes([command]))
+    print('Comando para iniciar coleta enviado ao ESP32')
+    coleta_ativa = True  # Ative a coleta
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

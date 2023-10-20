@@ -41,10 +41,12 @@
     <p id="coleta-status"></p>
 
     <div id="botoes-container">
-        <button id="iniciar" class="round-button button-size">Iniciar</button>
-        <button id="parar" class="round-button button-size">Parar</button>
+        <button id="iniciar" class="round-button button-size">Iniciar Coleta</button>
+        <button id="parar" class="round-button button-size">Parar Coleta</button>
+        <button id="ativar-fes" class="round-button button-size">Ativar FES</button>
         <a href="/chart" class="round-button">Ir para o Gráfico</a>
     </div>
+    
 
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -103,6 +105,41 @@
             }
         });
 
+        // Função para exibir mensagens em balões que desaparecem após um período de tempo
+        function showBalloonMessage(message, timeout) {
+            var balloon = document.createElement('div');
+            balloon.className = 'balloon-message';
+            balloon.innerText = message;
+            document.body.appendChild(balloon);
+    
+            setTimeout(function() {
+                document.body.removeChild(balloon);
+            }, timeout);
+        }
+    
+        // Evento de clique do botão "Parar"
+        document.getElementById('parar').onclick = function() {
+            socket.emit('update_params', { command: 0xFF });
+            console.log('Coleta interrompida');
+            showBalloonMessage('Coleta interrompida.', 3000);
+            coleta_ativa = false; // Desative a coleta
+        };
+    
+        // Evento de clique do botão "Iniciar Coleta"
+        document.getElementById('iniciar').onclick = function() {
+            socket.emit('iniciar_coleta', { command: 0x01 });
+            console.log('Coleta iniciada');
+            showBalloonMessage('Coleta iniciada.', 3000);
+            coleta_ativa = true; // Ative a coleta
+        };
+
+        // Evento de clique do botão "Ativar FES"
+        document.getElementById('ativar-fes').onclick = function() {
+            socket.emit('ativar-fes', { command: 0x02 });
+            console.log('Ativar FES');
+            //showBalloonMessage('FES ativada.', 3000);
+        };
+
         let estadoAnterior = null; // Variável para rastrear o estado anterior
 
         // Esta função será executada assim que a página estiver completamente carregada
@@ -125,35 +162,6 @@
                 });
             setTimeout(verificarEstadoFES, 1000); 
         }
-
-  
-
-        // Função para exibir mensagens em balões que desaparecem após um período de tempo
-        function showBalloonMessage(message, timeout) {
-            var balloon = document.createElement('div');
-            balloon.className = 'balloon-message';
-            balloon.innerText = message;
-            document.body.appendChild(balloon);
-    
-            setTimeout(function() {
-                document.body.removeChild(balloon);
-            }, timeout);
-        }
-    
-        // Evento de clique do botão "Parar"
-        document.getElementById('parar').onclick = function() {
-            socket.emit('update_params', { command: 0xFF });
-            console.log('Parado');
-            showBalloonMessage('Coleta interrompida.', 3000);
-        };
-    
-        // Evento de clique do botão "Iniciar"
-        document.getElementById('iniciar').onclick = function() {
-            socket.emit('iniciar_coleta', { command: 0x01 });
-            console.log('Retomado');
-            showBalloonMessage('Coleta retomada.', 3000);
-        };
-
 
     </script>
 

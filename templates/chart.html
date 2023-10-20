@@ -15,19 +15,24 @@
     </div>
 
     <script>
-        // Crie o gráfico ao vivo aqui usando Plotly ou outra biblioteca de sua escolha
         var dataBuffer = [];
         var timeBuffer = [];
+        var bufferSize = 300;  // Tamanho máximo do buffer
         var updateInterval = 1;  // Intervalo de atualização em milissegundos
 
         // Função para atualizar o gráfico
         function updateChart() {
+            // Limitar o tamanho dos buffers
+            if (timeBuffer.length > bufferSize) {
+                timeBuffer = timeBuffer.slice(timeBuffer.length - bufferSize);
+                dataBuffer = dataBuffer.slice(dataBuffer.length - bufferSize);
+            }
+
             Plotly.newPlot('live-chart', [{
                 x: timeBuffer,
                 y: dataBuffer,
-                type: 'line', 
+                type: 'line',
                 borderColor: 'green',
-                
             }], {
                 title: 'Gráfico ao Vivo',
                 xaxis: {
@@ -44,8 +49,10 @@
             fetch('/data')
                 .then(response => response.json())
                 .then(data => {
-                    timeBuffer = data.time;
-                    dataBuffer = data.data;
+                    timeBuffer = timeBuffer.concat(data.time);
+                    dataBuffer = dataBuffer.concat(data.data);
+
+                    // Atualizar o gráfico
                     updateChart();
                 });
         }
