@@ -47,6 +47,7 @@
         <a href="/chart" class="round-button">Ir para o Gráfico</a>
     </div>
     
+    <div id="message-list"></div>
 
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -110,12 +111,16 @@
             var balloon = document.createElement('div');
             balloon.className = 'balloon-message';
             balloon.innerText = message;
-            document.body.appendChild(balloon);
-    
+        
+            // Adicione a nova mensagem à lista de mensagens
+            var messageList = document.getElementById('message-list');
+            messageList.appendChild(balloon);
+        
             setTimeout(function() {
-                document.body.removeChild(balloon);
+                // Remova a mensagem após o tempo limite
+                messageList.removeChild(balloon);
             }, timeout);
-        }
+        }        
     
         // Evento de clique do botão "Parar"
         document.getElementById('parar').onclick = function() {
@@ -124,6 +129,13 @@
             showBalloonMessage('Coleta interrompida.', 3000);
             coleta_ativa = false; // Desative a coleta
         };
+
+        document.getElementById('ativar-fes').onclick = function() {
+            socket.emit('update_params', { command: 0x02 });
+            console.log('Botão FES');
+            showBalloonMessage('Botão FES', 3000);
+            
+        };
     
         // Evento de clique do botão "Iniciar Coleta"
         document.getElementById('iniciar').onclick = function() {
@@ -131,13 +143,6 @@
             console.log('Coleta iniciada');
             showBalloonMessage('Coleta iniciada.', 3000);
             coleta_ativa = true; // Ative a coleta
-        };
-
-        // Evento de clique do botão "Ativar FES"
-        document.getElementById('ativar-fes').onclick = function() {
-            socket.emit('ativar-fes', { command: 0x02 });
-            console.log('Ativar FES');
-            //showBalloonMessage('FES ativada.', 3000);
         };
 
         let estadoAnterior = null; // Variável para rastrear o estado anterior
@@ -163,10 +168,7 @@
             setTimeout(verificarEstadoFES, 1000); 
         }
 
+
     </script>
-
-    
-
-    
 </body>
 </html>

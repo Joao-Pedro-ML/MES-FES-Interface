@@ -99,6 +99,7 @@ def FES():
     elif fes == 0:
         return jsonify({'FES': 'desligada'})
     
+    
 # Iniciar a leitura da porta serial em uma thread separada
 serial_thread = threading.Thread(target=read_serial_data)
 serial_thread.daemon = True
