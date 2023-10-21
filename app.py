@@ -1,10 +1,12 @@
-from flask import Flask, render_template, jsonify, request
+import io
+from flask import Flask, render_template, jsonify, request, make_response
 import serial
 import time
 import threading
 from flask_socketio import SocketIO, emit
 import os
 from scipy import signal
+import csv
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -15,6 +17,7 @@ ser = serial.Serial('/dev/cu.ESP32', 115200)
 # Variáveis para armazenar os dados da porta serial
 data_buffer = []
 time_buffer = []
+dados = [] # lista dos dados brutos para salvar no arquivo csv
 
 # Variáveis para armazenar o valor dos parâmetro
 th = 0.0
@@ -56,11 +59,11 @@ def read_serial_data():
         try:
             while int.from_bytes(ser.read(), "big") != 204:
                 pass
-            
             b1 = int.from_bytes(ser.read(), "big")
             b2 = int.from_bytes(ser.read(), "big")
             current_time_millis = int(round(time.time() * 1000))
             dado = b1 * 256 + b2
+            dados.append(dado)
             if dado == 70:
                 print('FES Ativada')
                 fes = 1
@@ -69,7 +72,6 @@ def read_serial_data():
             dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado_conv], zi=zi_notch)
             # Aplica o filtro passa-banda
             dado_filtrado, zi = signal.lfilter(b, a, dado_filtrado_notch, zi=zi)
-            #dado_certo = (abs(dado_filtrado[0])*3.3)/4095
             data_buffer.append(abs(dado_filtrado[0]))
             time_buffer.append(current_time_millis - current_time_millis + start)
             start = start + (1/1000)
@@ -134,6 +136,25 @@ def start_collection(data):
     ser.write(bytes([command]))
     print('Comando para iniciar coleta enviado ao ESP32')
     coleta_ativa = True  # Ative a coleta
+
+
+@app.route('/download_csv', methods=['GET'])
+def download_csv():
+    response = make_response(generate_csv())
+    response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment; filename=dados.csv'
+
+    return response
+
+def generate_csv():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['tempo', 'dado']) 
+
+    for i in range(len(dados)):
+        writer.writerow([time_buffer[i], dados[i]])
+
+    return output.getvalue()
 
 
 if __name__ == '__main__':
