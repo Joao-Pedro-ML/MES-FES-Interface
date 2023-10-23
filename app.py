@@ -68,7 +68,7 @@ def read_serial_data():
                 print('FES Ativada')
                 fes = 1
             # Aplica o filtro notch em 60Hz
-            dado_conv = abs((dado*3.3)/4095)
+            dado_conv = (dado*3.3)/4095
             dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado_conv], zi=zi_notch)
             # Aplica o filtro passa-banda
             dado_filtrado, zi = signal.lfilter(b, a, dado_filtrado_notch, zi=zi)

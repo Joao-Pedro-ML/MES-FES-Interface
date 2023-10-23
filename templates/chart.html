@@ -17,7 +17,7 @@
     <script>
         var dataBuffer = [];
         var timeBuffer = [];
-        var bufferSize = 300;  // Tamanho máximo do buffer
+        var bufferSize = 5000;  // Tamanho máximo do buffer
         var updateInterval = 1;  // Intervalo de atualização em milissegundos
 
         // Função para atualizar o gráfico
@@ -31,6 +31,7 @@
             Plotly.newPlot('live-chart', [{
                 x: timeBuffer,
                 y: dataBuffer,
+                yaxis: {range: [0, 5]},
                 type: 'line',
                 borderColor: 'green',
             }], {

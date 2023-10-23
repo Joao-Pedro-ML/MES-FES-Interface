@@ -13,7 +13,7 @@ BluetoothSerial SerialBT;
 float th = 0;  // Threshold (inclinação)
 float ta = 0;  // Tempo de ativação (T_on)
 float in = 0;  // Intensidade (t_on)
-float tempo = 0;
+float tempo = 1;
 float Tfreq = 25000;
 
 // PARAMETROS A FAZER
@@ -23,7 +23,7 @@ float T_decrease = 937.5;  // T_decrease
 float th_apm_max = 3.0;    // th_amplitude_max - DONE
 float th_amp_min = 0.0;    // th_amplitude_min - DONE
 int T_pos = 0;             // T_pos (tempo morto) - DONE
-int tilt = 12;             // Tilt sensor
+int tilt = 0;             // Tilt sensor
 
 uint16_t amostras_1[100];
 uint16_t amostras_2[100];
@@ -73,14 +73,17 @@ void FES() {
   SerialBT.write(0xCC);  //byte inicial
   SerialBT.write((is_fes >> 8));
   SerialBT.write((is_fes)&0xFF);
-  for (Tfreq = 50000; Tfreq >= 25000; Tfreq = Tfreq - T_rise) {  //Rise 20Hz to 40Hz
+  for (float Tfreq = 50000; Tfreq >= 25000; Tfreq = Tfreq - T_rise) {  //Rise 20Hz to 40Hz
     digitalWrite(32, HIGH);
     digitalWrite(33, LOW);
     delayMicroseconds(in);
     digitalWrite(32, LOW);
+    digitalWrite(33, LOW);
     delayMicroseconds(10);  //interpulse 10us off time
     digitalWrite(33, HIGH);
+    digitalWrite(32, LOW);
     delayMicroseconds(in);
+    digitalWrite(32, LOW);
     digitalWrite(33, LOW);
     delayMicroseconds(Tfreq - (2 * in));
   }
@@ -90,14 +93,18 @@ void FES() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
   digitalWrite(LED_BUILTIN, HIGH);
-  while (tempo < ta) {
+  while (tempo < (ta*40)) {
+    tempo++;
     digitalWrite(32, HIGH);
     digitalWrite(33, LOW);
     delayMicroseconds(in);
     digitalWrite(32, LOW);
+    digitalWrite(33, LOW);
     delayMicroseconds(10);
     digitalWrite(33, HIGH);
+    digitalWrite(32, LOW);
     delayMicroseconds(in);
+    digitalWrite(32, LOW);
     digitalWrite(33, LOW);
     delayMicroseconds(Tfreq - (2 * in));
   }
@@ -107,28 +114,28 @@ void FES() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
   digitalWrite(LED_BUILTIN, HIGH);
-  for (float Tfreq = 25000; Tfreq >= 50000; Tfreq = Tfreq + T_decrease) {  //Decrease 40Hz to 20Hz
+  for (float Tfreq = 25000; Tfreq <= 50000; Tfreq = Tfreq + T_decrease) {  //Decrease 40Hz to 20Hz
     digitalWrite(32, HIGH);
     digitalWrite(33, LOW);
     delayMicroseconds(in);
     digitalWrite(32, LOW);
+    digitalWrite(33, LOW);
     delayMicroseconds(10);  //interpulse 10us off time
     digitalWrite(33, HIGH);
+    digitalWrite(32, LOW);
     delayMicroseconds(in);
     digitalWrite(33, LOW);
-    delayMicroseconds(Tfreq - 2 * in);
+    digitalWrite(32, LOW);
   }
-
-  unsigned long millisAtual = millis();  //tempo atual em milissegundos
-  while (millisAtual - tempo < T_pos) {
-    tempo = millisAtual;
+  tempo=1;
+  while (tempo < T_pos) {
     Serial.println("Pausa pós FES");
+    tempo++;
     digitalWrite(LED_BUILTIN, LOW);
   }
   digitalWrite(LED_BUILTIN, HIGH);
+  tempo=1;
 }
-
-
 
 void loop() {
 
@@ -202,7 +209,7 @@ void loop() {
   }
   float rms2 = sqrt(somaQuadrados2 / 100);
 
-  if (rms2 > (1 + th) * rms1 && rms2 > th_amp_min && rms2 < th_apm_max) {
+  if (rms2 > (1 + th) * rms1 && rms2 > th_amp_min && rms2 < th_apm_max && tilt == 0) {
     Serial.println("Rotina FES");
     FES();
   }
