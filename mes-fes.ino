@@ -3,7 +3,7 @@
 
 hw_timer_t *timer_coleta = NULL;
 
-const int emgPin = 34;     // Pino de entrada do sinal EMG 
+const int emgPin = 34;     // Pino de entrada do sinal EMG (vp)
 const int sampleRate = 1;  // Taxa de amostragem em milissegundos (1 ms)
 uint16_t emgValue = 0;
 bool coleta = false;
@@ -15,11 +15,14 @@ float ta = 0;  // Tempo de ativação (T_on)
 float in = 0;  // Intensidade (t_on)
 float tempo = 0;
 float Tfreq = 25000;
+
+// PARAMETROS A FAZER
+
 float T_rise = 937.5;      // T_rise
 float T_decrease = 937.5;  // T_decrease
-float th_apm_max = 3.0;    // th_amplitude_max 
-float th_amp_min = 0.0;    // th_amplitude_min 
-int T_pos = 0;             // T_pos (tempo morto) 
+float th_apm_max = 3.0;    // th_amplitude_max - DONE
+float th_amp_min = 0.0;    // th_amplitude_min - DONE
+int T_pos = 0;             // T_pos (tempo morto) - DONE
 int tilt = 12;             // Tilt sensor
 
 uint16_t amostras_1[100];
@@ -32,7 +35,7 @@ void IRAM_ATTR onColeta() {
 
 uint16_t is_fes = 70;
 
-const int LED_BUILTIN = 2; 
+const int LED_BUILTIN = 2;
 
 void setup() {
   Serial.begin(115200);
@@ -62,7 +65,7 @@ void setup() {
 
 void FES() {
   Serial.println("FES Rising");
-  digitalWrite(LED_BUILTIN, HIGH);  
+  digitalWrite(LED_BUILTIN, HIGH);  // Liga o LED embutido
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
@@ -82,7 +85,7 @@ void FES() {
     delayMicroseconds(Tfreq - (2 * in));
   }
   Serial.println("FES Activated");
-  digitalWrite(LED_BUILTIN, HIGH);  
+  digitalWrite(LED_BUILTIN, HIGH);  // Liga o LED embutido
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
@@ -99,7 +102,7 @@ void FES() {
     delayMicroseconds(Tfreq - (2 * in));
   }
   Serial.println("FES Decreasing");
-  digitalWrite(LED_BUILTIN, HIGH);  
+  digitalWrite(LED_BUILTIN, HIGH);  // Liga o LED embutido
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
   delay(50);
@@ -136,13 +139,17 @@ void loop() {
       coleta = false;
       digitalWrite(LED_BUILTIN, LOW);
       // Espere até receber o comando 'iniciar coleta'
-      while (SerialBT.available() < 1) {
-        delay(100); // Aguarde 100 ms
-      }
-      // Reinicie a coleta apenas se o comando for 'iniciar coleta'
-      if (SerialBT.read() == 0x01) {
-        coleta = true;
-        digitalWrite(LED_BUILTIN, HIGH);
+      while (command != 0x01) {
+        Serial.println("Coleta Parada");
+        // Reinicie a coleta apenas se o comando for 'iniciar coleta'
+        if (SerialBT.available() >= 1) {
+          command = SerialBT.read();
+          if (command == 0x01) {
+            coleta = true;
+            Serial.println("Coleta retomada");
+            digitalWrite(LED_BUILTIN, HIGH);
+          }
+        }
       }
     } else if (command == 0x02) {
       // Recebeu o comando de ligar a FES, ligue a FES
@@ -153,6 +160,7 @@ void loop() {
 
   if (coleta == true) {
     int index = 0;
+    //digitalWrite(LED_BUILTIN, HIGH);
     timerWrite(timer_coleta, 0);
     emgValue = analogRead(emgPin);
     SerialBT.write(0xCC);  //byte inicial
