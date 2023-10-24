@@ -41,6 +41,7 @@ void setup() {
   Serial.begin(115200);
   SerialBT.begin("ESP32");
   pinMode(emgPin, INPUT);
+  pinMode(12, INPUT);
 
   timer_coleta = timerBegin(0, 80, true);
   timerAttachInterrupt(timer_coleta, &onColeta, true);
@@ -60,8 +61,6 @@ void setup() {
   delay(500);
   digitalWrite(LED_BUILTIN, HIGH);
 }
-
-
 
 void FES() {
   Serial.println("FES Rising");
