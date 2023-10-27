@@ -1,14 +1,14 @@
 {
     "builds":[
         {
-            "src": "TCCV2/app.py",
+            "src": "TCCv2/app.py",
             "use": "@vercel/python"
         }
     ],
     "routes":[
         {
             "src": "/(.*)",
-            "dest": "TCCV2/app.py"
+            "dest": "TCCv2/app.py"
         }
     ]
 }
