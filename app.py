@@ -1,7 +1,6 @@
 import io
 from flask import Flask, render_template, jsonify, request, make_response
 import serial
-import time
 import threading
 from flask_socketio import SocketIO, emit
 import os
@@ -61,7 +60,6 @@ def read_serial_data():
                 pass
             b1 = int.from_bytes(ser.read(), "big")
             b2 = int.from_bytes(ser.read(), "big")
-            current_time_millis = int(round(time.time() * 1000))
             dado = b1 * 256 + b2
             dados.append(dado)
             if dado == 70:
@@ -72,9 +70,9 @@ def read_serial_data():
             dado_filtrado_notch, zi_notch = signal.lfilter(b_notch, a_notch, [dado_conv], zi=zi_notch)
             # Aplica o filtro passa-banda
             dado_filtrado, zi = signal.lfilter(b, a, dado_filtrado_notch, zi=zi)
-            data_buffer.append(abs(dado_filtrado[0]))
-            time_buffer.append(current_time_millis - current_time_millis + start)
             start = start + (1/1000)
+            data_buffer.append(abs(dado_filtrado[0]))
+            time_buffer.append(start)
         except ValueError:
             pass  # Lida com dados inválidos, se necessário
 
@@ -101,12 +99,6 @@ def FES():
     elif fes == 0:
         return jsonify({'FES': 'desligada'})
     
-    
-# Iniciar a leitura da porta serial em uma thread separada
-serial_thread = threading.Thread(target=read_serial_data)
-serial_thread.daemon = True
-serial_thread.start()
-
 # Rota para a página inicial
 @app.route('/')
 def index():
@@ -156,6 +148,10 @@ def generate_csv():
 
     return output.getvalue()
 
+# Iniciar a leitura da porta serial em uma thread separada
+serial_thread = threading.Thread(target=read_serial_data)
+serial_thread.daemon = True
+serial_thread.start()
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
