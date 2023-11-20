@@ -26,4 +26,4 @@ This Web Application was built using the following technologies:
 
 ## Author
 
-João Pedro Moreto Lourençã0 (joaopedrolourencao@gmail.com).
+João Pedro Moreto Lourenção (joaopedrolourencao@gmail.com).
