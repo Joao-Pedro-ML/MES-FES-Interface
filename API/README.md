@@ -1,14 +1,21 @@
-# Trabalho de Conclusão de Curso 
+# Final Paper
 
-Bem-vindo ao repositório do meu TCC. Ele contém o texto e o código fonte da aplicação desenvolvida.
+Welcome to the repository of my final course work. It contains the text and the source code of the developed application.
 
-## Visão Geral
+## For reuse or suggestion of improvements, please cite the monograph
+LOURENÇÃO, J. P. M. SYSTEM OF ACQUISITION AND PROCESSING OF SURFACE ELECTROMYOGRAPHY SIGNALS IN REAL TIME APPLIED IN MES-FES INTERFACE. 2023.
 
-A aplicação consiste num sistema de aquisição e processamento de dados de eletromiografia de superfície em tempo real aplicado em interface MES-FES. 
+Or
 
-## Tecnologias Utilizadas
+LOURENÇÃO, J. P. M. SISTEMA DE AQUISIÇÃO E PROCESSAMENTO DE SINAIS DE ELETROMIOGRAFIA DE SUPERFÍCIE EM TEMPO REAL APLICADO EM INTERFACE MES-FES. 2023.
 
-Meu site de portfólio foi construído utilizando as seguintes tecnologias:
+## Overview
+
+The application consists of a system for acquiring and processing real-time surface electromyography data applied in a MES-FES interface.
+
+## Technologies Used
+
+This Web Application was built using the following technologies:
 
 - Python
 - Flask
@@ -17,9 +24,6 @@ Meu site de portfólio foi construído utilizando as seguintes tecnologias:
 - CSS
 - JavaScript
 
-Para reutilizar este trabalho, favor citar ...
+## Author
 
-## Contato
-
-Você pode entrar em contato comigo através do e-mail joaopedrolourencao@gmail.com.
-
+João Pedro Moreto Lourenção (joaopedrolourencao@gmail.com).
