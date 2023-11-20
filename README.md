@@ -4,7 +4,9 @@ Welcome to the repository of my final course work. It contains the text and the 
 
 ## For reuse or suggestion of improvements, please cite the monograph
 LOURENÇÃO, J. P. M. SYSTEM OF ACQUISITION AND PROCESSING OF SURFACE ELECTROMYOGRAPHY SIGNALS IN REAL TIME APPLIED IN MES-FES INTERFACE. 2023.
+
 Or
+
 LOURENÇÃO, J. P. M. SISTEMA DE AQUISIÇÃO E PROCESSAMENTO DE SINAIS DE ELETROMIOGRAFIA DE SUPERFÍCIE EM TEMPO REAL APLICADO EM INTERFACE MES-FES. 2023.
 
 ## Overview
