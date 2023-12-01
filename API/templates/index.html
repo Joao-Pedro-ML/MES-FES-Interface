@@ -81,10 +81,10 @@
                         $("#tempoPos_value").text(tempoPos);
                         
                         //document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
-                        showBalloonMessage('Parâmetros atualizados com sucesso!', 3000);
+                        showBalloonMessageGreen('Parâmetros atualizados com sucesso!', 3000);
                     } else {
                         //document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
-                        showBalloonMessage('Erro ao atualizar os parâmetros.', 3000);
+                        showBalloonMessageRed('Erro ao atualizar os parâmetros.', 3000);
                     }
                 }
             });
@@ -96,21 +96,10 @@
             updateParameters();
         };
 
-        // Atualize o resultado após a atualização dos parâmetros
-        socket.on('params_updated', function(data) {
-            if (data.success) {
-                //document.getElementById('update-result').innerText = 'Parâmetros atualizados com sucesso!';
-                showBalloonMessage('Parâmetros atualizados com sucesso!', 3000);
-            } else {
-                //document.getElementById('update-result').innerText = 'Erro ao atualizar os parâmetros.';
-                showBalloonMessage('Erro ao atualizar os parâmetros.', 3000);
-            }
-        });
-
-        // Função para exibir mensagens em balões que desaparecem após um período de tempo
-        function showBalloonMessage(message, timeout) {
+        // Função para exibir balões azuis
+        function showBalloonMessageBlue(message, timeout) {
             var balloon = document.createElement('div');
-            balloon.className = 'balloon-message';
+            balloon.className = 'balloon-message-blue';
             balloon.innerText = message;
         
             var messageList = document.getElementById('message-list');
@@ -119,20 +108,50 @@
             setTimeout(function() {
                 messageList.removeChild(balloon);
             }, timeout);
-        }        
+        }  
+
+
+        // Função para exibir balões verdes
+        function showBalloonMessageGreen(message, timeout) {
+            var balloon = document.createElement('div');
+            balloon.className = 'balloon-message-green';
+            balloon.innerText = message;
+        
+            var messageList = document.getElementById('message-list');
+            messageList.appendChild(balloon);
+        
+            setTimeout(function() {
+                messageList.removeChild(balloon);
+            }, timeout);
+        }  
+        
+        
+        // Função para exibir balões vermelhos
+        function showBalloonMessageRed(message, timeout) {
+            var balloon = document.createElement('div');
+            balloon.className = 'balloon-message-red';
+            balloon.innerText = message;
+        
+            var messageList = document.getElementById('message-list');
+            messageList.appendChild(balloon);
+        
+            setTimeout(function() {
+                messageList.removeChild(balloon);
+            }, timeout);
+        } 
     
         // Evento de clique do botão "Parar"
         document.getElementById('parar').onclick = function() {
             socket.emit('update_params', { command: 0xFF });
             console.log('Coleta interrompida');
-            showBalloonMessage('Coleta interrompida.', 3000);
+            showBalloonMessageRed('Coleta interrompida.', 3000);
             coleta_ativa = false; // Desativa a coleta
         };
 
         document.getElementById('ativar-fes').onclick = function() {
             socket.emit('update_params', { command: 0x02 });
             console.log('Botão FES');
-            showBalloonMessage('Botão FES', 3000);
+            showBalloonMessageBlue('Botão FES', 3000);
             
         };
     
@@ -140,7 +159,7 @@
         document.getElementById('iniciar').onclick = function() {
             socket.emit('iniciar_coleta', { command: 0x01 });
             console.log('Coleta iniciada');
-            showBalloonMessage('Coleta iniciada.', 3000);
+            showBalloonMessageGreen('Coleta iniciada.', 3000);
             coleta_ativa = true; // Ativa a coleta
         };
 
@@ -157,7 +176,7 @@
                 .then(data => {
                     const novoEstado = data.FES;
                     if (estadoAnterior !== null && estadoAnterior === 'desligada' && novoEstado === 'ativada') {
-                        showBalloonMessage('FES Ativada!', 3000);
+                        showBalloonMessageBlue('FES Ativada!', 3000);
                     }
                     estadoAnterior = novoEstado;
                 })
