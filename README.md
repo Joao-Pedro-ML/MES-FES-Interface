@@ -30,4 +30,4 @@ This Web Application was built using the following technologies:
 
 ## Author
 
-João Pedro Moreto Lourenção [joaopedrolourencao@gmail.com](mailto:joaopedrolourencao@gmail.com).
+João Pedro Moreto Lourenção ([joaopedrolourencao@gmail.com](mailto:joaopedrolourencao@gmail.com)).
