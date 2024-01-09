@@ -2,10 +2,6 @@
 
 Welcome to the repository of my final course work. It contains the text and the source code of the developed application.
 
-## Full Text
-
-[Click here to view the full text]([TCC-MES-FES/TCC_Joao_Pedro]([https://github.com/Joao-Pedro-ML/TCC-MES-FES/blob/main/TCC_JoaoPedro.pdf](https://github.com/Joao-Pedro-ML/TCC-MES-FES/blob/main/TCC_JoaoPedro.pdf)))
-
 ## For reuse or suggestion of improvements, please cite the monograph
 LOURENÇÃO, J. P. M. SYSTEM OF ACQUISITION AND PROCESSING OF SURFACE ELECTROMYOGRAPHY SIGNALS IN REAL TIME APPLIED IN MES-FES INTERFACE. 2023.
 
