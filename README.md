@@ -1,13 +1,14 @@
 # Final Paper
 
-Welcome to the repository of my final course work. It contains the text and the source code of the developed application.
+Produto Tecnológico desenvolvido durante projeto de Trabalho de Conclusão de Curso "SISTEMA DE AQUISIÇÃO E PROCESSAMENTO DE SINAIS DE ELETROMIOGRAFIA DE SUPERFÍCIE EM TEMPO REAL APLICADO EM INTERFACE MES-FES" do curso de Engenharia de Computação da UTFPR - Campus Apucarana, sob orientação do professor Dr. Daniel Prado de Campos. 
+
+Technological Product developed during the Course Completion Work project "REAL-TIME SURFACE ELECTROMYOGRAPHY SIGNAL ACQUISITION AND PROCESSING SYSTEM APPLIED IN MES-FES INTERFACE" of the Computer Engineering course at UTFPR - Campus Apucarana, under the guidance of professor Dr. Daniel Prado de Campos.
 
 ## For reuse or suggestion of improvements, please cite the monograph
-LOURENÇÃO, J. P. M. SYSTEM OF ACQUISITION AND PROCESSING OF SURFACE ELECTROMYOGRAPHY SIGNALS IN REAL TIME APPLIED IN MES-FES INTERFACE. 2023.
+LOURENÇÃO, João Pedro Moreto. Sistema de aquisição e processamento de sinais de eletromiografia de superfície em tempo real aplicado em interface mes-fes. 2023. Trabalho de Conclusão de Curso (Bacharelado em Engenharia de Computação) – Universidade Tecnológica Federal do Paraná, Apucarana, 2023.
 
-Or
-
-LOURENÇÃO, J. P. M. SISTEMA DE AQUISIÇÃO E PROCESSAMENTO DE SINAIS DE ELETROMIOGRAFIA DE SUPERFÍCIE EM TEMPO REAL APLICADO EM INTERFACE MES-FES. 2023.
+## Full Text
+([http://repositorio.utfpr.edu.br/jspui/handle/1/33483](http://repositorio.utfpr.edu.br/jspui/handle/1/33483))
 
 ## Overview
 
