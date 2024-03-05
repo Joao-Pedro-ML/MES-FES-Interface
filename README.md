@@ -4,7 +4,7 @@ Produto Tecnológico desenvolvido durante projeto de Trabalho de Conclusão de C
 
 Technological Product developed during the Course Completion Work project "REAL-TIME SURFACE ELECTROMYOGRAPHY SIGNAL ACQUISITION AND PROCESSING SYSTEM APPLIED IN MES-FES INTERFACE" of the Computer Engineering course at UTFPR - Campus Apucarana, under the guidance of professor Dr. Daniel Prado de Campos.
 
-## For reuse or suggestion of improvements, please cite the monograph
+## For reuse or suggestion of improvements, please cite the monography
 LOURENÇÃO, João Pedro Moreto. Sistema de aquisição e processamento de sinais de eletromiografia de superfície em tempo real aplicado em interface mes-fes. 2023. Trabalho de Conclusão de Curso (Bacharelado em Engenharia de Computação) – Universidade Tecnológica Federal do Paraná, Apucarana, 2023.
 
 ## Full Text
