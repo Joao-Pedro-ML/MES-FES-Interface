@@ -8,7 +8,7 @@ Technological Product developed during the Course Completion Work project "REAL-
 LOURENÇÃO, João Pedro Moreto. Sistema de aquisição e processamento de sinais de eletromiografia de superfície em tempo real aplicado em interface mes-fes. 2023. Trabalho de Conclusão de Curso (Bacharelado em Engenharia de Computação) – Universidade Tecnológica Federal do Paraná, Apucarana, 2023.
 
 ## Full Text
-([http://repositorio.utfpr.edu.br/jspui/handle/1/33483]http://repositorio.utfpr.edu.br/jspui/handle/1/33483)
+[http://repositorio.utfpr.edu.br/jspui/handle/1/33483]http://repositorio.utfpr.edu.br/jspui/handle/1/33483
 
 ## Overview
 
