@@ -16,14 +16,13 @@ float in = 0;  // Intensidade (t_on)
 float tempo = 1;
 float Tfreq = 25000;
 
-// PARAMETROS A FAZER
-
 float T_rise = 937.5;      // T_rise
 float T_decrease = 937.5;  // T_decrease
 float th_apm_max = 3.0;    // th_amplitude_max - DONE
 float th_amp_min = 0.0;    // th_amplitude_min - DONE
 int T_pos = 0;             // T_pos (tempo morto) - DONE
 int tilt = 0;             // Tilt sensor
+int indice = 0;           // Indice do vetor de amostras
 
 uint16_t amostras_1[100];
 uint16_t amostras_2[100];
@@ -48,7 +47,7 @@ void setup() {
   timerAlarmWrite(timer_coleta, 500, true);
   timerAlarmEnable(timer_coleta);
 
-  Serial.println("Sistema ligado...");
+  //Serial.println("Sistema ligado...");
 
   // FES to H bridge
   pinMode(32, OUTPUT);
@@ -60,10 +59,11 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(500);
   digitalWrite(LED_BUILTIN, HIGH);
+  
 }
 
 void FES() {
-  Serial.println("FES Rising");
+  //Serial.println("FES Rising");
   digitalWrite(LED_BUILTIN, HIGH);  // Liga o LED embutido
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
@@ -86,7 +86,7 @@ void FES() {
     digitalWrite(33, LOW);
     delayMicroseconds(Tfreq - (2 * in));
   }
-  Serial.println("FES Activated");
+  //Serial.println("FES Activated");
   digitalWrite(LED_BUILTIN, HIGH);  // Liga o LED embutido
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
@@ -107,7 +107,7 @@ void FES() {
     digitalWrite(33, LOW);
     delayMicroseconds(Tfreq - (2 * in));
   }
-  Serial.println("FES Decreasing");
+  //Serial.println("FES Decreasing");
   digitalWrite(LED_BUILTIN, HIGH);  // Liga o LED embutido
   delay(50);
   digitalWrite(LED_BUILTIN, LOW);
@@ -128,7 +128,7 @@ void FES() {
   }
   tempo=1;
   while (tempo < T_pos) {
-    Serial.println("Pausa pós FES");
+    //Serial.println("Pausa pós FES");
     tempo++;
     digitalWrite(LED_BUILTIN, LOW);
   }
@@ -152,32 +152,32 @@ void loop() {
           command = SerialBT.read();
           if (command == 0x01) {
             coleta = true;
-            Serial.println("Coleta retomada");
+            //Serial.println("Coleta retomada");
             digitalWrite(LED_BUILTIN, HIGH);
           }
         }
       }
     } else if (command == 0x02) {
       // Recebeu o comando de ligar a FES, ligue a FES
-      Serial.println("Comando de ligar FES recebido!");
+      //Serial.println("Comando de ligar FES recebido!");
       FES();
     }
   }
-
+  
   if (coleta == true) {
-    int index = 0;
+    
     //digitalWrite(LED_BUILTIN, HIGH);
     timerWrite(timer_coleta, 0);
     emgValue = analogRead(emgPin);
     SerialBT.write(0xCC);  //byte inicial
     SerialBT.write((emgValue >> 8));
     SerialBT.write((emgValue)&0xFF);
-    amostras[index] = emgValue;
+    amostras[indice] = emgValue;
     coleta = false;
-    index++;
-    tilt = digitalRead(12);
-    if (index == 200) {
-      index = 0;
+    indice++;
+    //tilt = digitalRead(12);
+    if (indice == 200) {
+      indice = 0;
     }
   }
 
@@ -188,12 +188,12 @@ void loop() {
     T_pos = SerialBT.read();
   }
 
-  for (int i = 0; i < (200 / 2); i++) {
-    amostras_1[i] = amostras[i];
-  }
-
-  for (int i = (200 / 2); i < 200; i++) {
-    amostras_2[i - (200 / 2)] = amostras[i];
+  for (int i = 0; i < 200; i++) {
+    if (i < 100) {
+        amostras_1[i] = amostras[i];
+    } else {
+        amostras_2[i - 100] = amostras[i];
+    }
   }
 
   float somaQuadrados1 = 0.0;
@@ -212,4 +212,5 @@ void loop() {
     Serial.println("Rotina FES");
     FES();
   }
+
 }
